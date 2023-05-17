@@ -8,6 +8,7 @@ import (
 	errors2 "bookshop/errors"
 	pb "bookshop/server/pb/inventory"
 
+	"github.com/cockroachdb/errors/grpc/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -19,7 +20,7 @@ type server struct {
 }
 
 func (s *server) GetBookList(ctx context.Context, in *pb.GetBookListRequest) (*pb.GetBookListResponse, error) {
-	return nil, errors.Wrapf(errors.Wrapf(errors2.ErrBookshop, "second layer"), "third layer")
+	return nil, errors.WithStack(errors.Wrapf(errors.Wrapf(errors2.ErrBookshop, "second layer"), "third layer"))
 	//log.Printf("Received request: %v", in.ProtoReflect().Descriptor().FullName())
 	//return &pb.GetBookListResponse{
 	//	Books: getSampleBooks(),
@@ -32,7 +33,7 @@ func main() {
 		panic(err)
 	}
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.UnaryInterceptor(middleware.UnaryServerInterceptor))
 	reflection.Register(s)
 	pb.RegisterInventoryServer(s, &server{})
 	if err := s.Serve(listener); err != nil {
