@@ -19,7 +19,7 @@ type server struct {
 }
 
 func (s *server) GetBookList(ctx context.Context, in *pb.GetBookListRequest) (*pb.GetBookListResponse, error) {
-	return nil, errors.Wrapf(errors.Wrapf(errors2.ErrBookshop, "second layer"), "third layer")
+	return nil, errors.WithStack(errors.Wrapf(errors2.ErrBookshop, "second layer"))
 	//log.Printf("Received request: %v", in.ProtoReflect().Descriptor().FullName())
 	//return &pb.GetBookListResponse{
 	//	Books: getSampleBooks(),

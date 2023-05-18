@@ -28,6 +28,7 @@ func main() {
 			log.Println("NOT RECOGNIZED")
 		}
 		log.Printf("CAUSE: %v", errors.Cause(err))
+		log.Printf("STACK TRACE: %v", errors.GetSafeDetails(err))
 	}
 	//log.Printf("book list: %v", bookList)
 }
